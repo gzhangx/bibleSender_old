@@ -1,0 +1,17 @@
+{
+	"name": "BibleSender",
+	"description": "BibleSender",
+	"version": "0.1.1",
+	"author": "gzhang",
+	"engines": {
+		"node": "latest",
+		"npm": "latest"
+	},
+	"scripts": {
+		"start": "grunt",
+		"test": "grunt test"
+	},
+	"dependencies": {
+		"nodemailer": "latest"
+	}
+}
