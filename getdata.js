@@ -82,7 +82,7 @@ var GetTodaysSearch = function (data, today) {
         for (var curdataii in curdataparts) {
             var curdata = curdataparts[curdataii];
             var numStart = 0;
-            for (; numStart < curdata.Length; numStart++) {
+            for (; numStart < curdata.length; numStart++) {
                 if (!isNaN(curdata[numStart])) {
                     break;
                 }
