@@ -64,6 +64,11 @@ var GetTodaysSearch = function (data, today) {
     var results = retResult.Verses;
     var lines = data.split('\n');
     var startDate = new Date(Date.parse(toASCII(lines[0].substring(1))));
+    var dd = new Date(Date.parse('2014-01-01'));
+    dd.setUTCFullYear(startDate.getFullYear());
+    dd.setUTCMonth(startDate.getMonth());
+    dd.setUTCDate(startDate.getDate());
+    startDate = dd;
     var days = Math.round((today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
     if (days < 0) return null;
     var DAYS_PER_LINE = 7;
