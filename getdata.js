@@ -2,6 +2,17 @@
 
 var fs = require('fs');
 
+
+
+
+var vm = require('vm');
+var includeInThisContext = function (path) {
+    var code = fs.readFileSync(path);
+    vm.runInThisContext(code, path);
+}.bind(this);
+includeInThisContext('tongwen_core.js');
+includeInThisContext('tongwen_table_t2s.js');
+
 var toASCII = function(chars) {
     var ascii = '';
     for(var i=0, l=chars.length; i<l; i++) {
@@ -185,7 +196,10 @@ var loadData = function (today) {
     }).split('\n');
     var searches = GetTodaysSearch(data, today);
     var mailBody = GetOutput(bibleData, searches.Verses);
+
+    var simp = TongWen.trans2Simp(mailBody);
     console.log(mailBody);
+    console.log(simp);
 };
 
 loadData(new Date());
