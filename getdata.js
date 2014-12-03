@@ -237,6 +237,22 @@ var SendEmail = function(now)
     //{
     //    sw.WriteLine(data.Data);
     //}
+
+    var nodemailer = require('nodemailer');
+    var transporter = nodemailer.createTransport({
+        port: 587,
+        host: 'smtp.mandrillapp.com',
+        auth: {
+            user: 'gzhangx@hotmail.com',
+            pass: 'xgTWejYD9NOZjNEG2SJMbQ'
+        }
+    });
+    transporter.sendMail({
+        from: 'gzhangx@gmail.com',
+        to: 'gzhangx@hotmail.com',
+        subject: message.Subject,
+        text: message.Body
+    });
     return data.Subject;
 }
 
