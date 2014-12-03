@@ -1,8 +1,13 @@
-'use strict';
+﻿'use strict';
 
 var fs = require('fs');
 
-
+Date.prototype.yyyymmdd = function () {
+    var yyyy = this.getFullYear().toString();
+    var mm = (this.getMonth() + 1).toString(); // getMonth() is zero-based
+    var dd = this.getDate().toString();
+    return yyyy + '-'+(mm[1] ? mm : "0" + mm[0])+ '-' + (dd[1] ? dd : "0" + dd[0]); // padding
+};
 
 
 var vm = require('vm');
@@ -63,10 +68,6 @@ var ParseLineData = function(data)
           }
           return lineData;
       };
-
-var data = fs.readFileSync('schedule.txt', 'utf8', function(err){
-  if (err) console.log('schedule.txt error ' + err);  
-});
 
 var GetTodaysSearch = function (data, today) {
     var retResult = {
@@ -191,15 +192,67 @@ var GetOutput = function (all, shows) {
 };
 
 var loadData = function (today) {
+    var scdata = fs.readFileSync('schedule.txt', 'utf8', function (err) {
+        if (err) console.log('schedule.txt error ' + err);
+    });
+    var searches = GetTodaysSearch(scdata, today);
+    if (searches === null) return null;
+
     var bibleData = fs.readFileSync('bibleUTF8.txt', 'utf8', function (err) {
         if (err) console.log('bibleutf error ' + err);
-    }).split('\n');
-    var searches = GetTodaysSearch(data, today);
-    var mailBody = GetOutput(bibleData, searches.Verses);
+    }).split('\n');    
+    
+    var ret = {};
+    var data = GetOutput(bibleData, searches.Verses);
+    if (searches.Subject === null) return null;
+    var simpSub = TongWen.trans2Simp(searches.Subject);
+    if (simpSub == searches.Subject) {
+        ret.Subject = searches.Subject;
+    }
+    else {
+        ret.Subject = simpSub + ' (' + searches.Subject + ')';
+    }
+    ret.Data = "===========简体中文=============\r\n" + TongWen.trans2Simp(data) + "\r\n===========繁体中文=============\r\n" + data;
+    return ret;
 
-    var simp = TongWen.trans2Simp(mailBody);
-    console.log(mailBody);
-    console.log(simp);
 };
 
-loadData(new Date());
+
+//var resss = loadData(new Date());
+//console.log(resss.Data);
+
+function SendEmail(now)
+{
+    var data = LoadData(now);
+    var message = {};
+    var sendTo = ''; //GetSetting("mailTo");
+    
+    message.Subject = data.Subject + ', ' + now.yyyymmdd();
+    message.BodyEncoding = System.Text.Encoding.UTF8;
+    message.Body = data.Data;
+    //Log(now.ToString("yyyy-MM-dd") + " " + sendTo + " " + message.Subject);         
+    //SendMailDefaultFrom(message);
+    //using (var sw = File.CreateText(@"c:\temp\bible\" + message.Subject.Replace("/", "_").Replace("\\", "_").Replace("<", "_").Replace(">", "_").Replace(":", "_").Replace("|", "_") + ".txt"))
+    //{
+    //    sw.WriteLine(data.Data);
+    //}
+    return data.Subject;
+}
+
+function DoMailSendCheckSendStatus(now)
+{
+    var sentFileName = 'sent.txt';
+    var date = now.yyyymmdd();
+    var sendStatusFile = '';
+    if (fs.existsSync(sentFileName)) {
+        sendStatusFile = (fs.readFileSync(sentFileName, function (err) {
+            if (err) console.log('sent.txt error ' + err);
+        }) || '').split('\n');
+        if (sendStatusFile.length > 0 && sendStatusFile[sendStatusFile.length - 1].indexOf(date) >= 0) return;
+    }
+    var sub = SendEmail(now);
+    fs.appendFileSync('log.txt', 'Hello', encoding = 'utf8');
+    File.AppendAllText(sentFileName, date + '   ' + sub + '\r\n');
+}
+
+DoMailSendCheckSendStatus(new Date());
