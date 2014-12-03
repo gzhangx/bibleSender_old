@@ -227,10 +227,10 @@ var SendEmail = function(now)
     var message = {};
     var sendTo = ''; //GetSetting("mailTo");
     
-    message.Subject = data.Subject + ', ' + now.yyyymmdd();
+    message.subject = data.Subject + ', ' + now.yyyymmdd();
     console.log('sending ' + message.Subject);
     //message.BodyEncoding = System.Text.Encoding.UTF8;
-    message.Body = data.Data;
+    message.text = data.Data;
     //Log(now.ToString("yyyy-MM-dd") + " " + sendTo + " " + message.Subject);         
     //SendMailDefaultFrom(message);
     //using (var sw = File.CreateText(@"c:\temp\bible\" + message.Subject.Replace("/", "_").Replace("\\", "_").Replace("<", "_").Replace(">", "_").Replace(":", "_").Replace("|", "_") + ".txt"))
@@ -238,22 +238,27 @@ var SendEmail = function(now)
     //    sw.WriteLine(data.Data);
     //}
 
-    var nodemailer = require('nodemailer');
-    var transporter = nodemailer.createTransport({
-        port: 587,
-        host: 'smtp.mandrillapp.com',
-        auth: {
-            user: 'gzhangx@hotmail.com',
-            pass: 'xgTWejYD9NOZjNEG2SJMbQ'
-        }
+    var mandrill = require('mandrill-api/mandrill');
+    var mandrill_client = new mandrill.Mandrill('xgTWejYD9NOZjNEG2SJMbQ', true);
+
+    var async = false;
+    var ip_pool = "Main Pool";
+    var send_at = "example send_at";
+    message.from_email = "gzhangx@gmail.com";
+    message.from_name = "Gang Zhang";
+    message.to = [{
+        "email": "gzhangx@hotmail.com",
+        "name": "Test",
+        "type": "to"
+    }];
+    mandrill_client.messages.send({ "message": message, "async": async, "ip_pool": ip_pool}, function (result) {
+        console.log(result);        
+    }, function (e) {
+        // Mandrill returns the error as an object with name and message keys
+        console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
+        // A mandrill error occurred: Unknown_Subaccount - No subaccount exists with the id 'customer-123'
     });
-    transporter.sendMail({
-        from: 'gzhangx@gmail.com',
-        to: 'gzhangx@hotmail.com',
-        subject: message.Subject,
-        text: message.Body
-    });
-    return data.Subject;
+    return data.subject;
 }
 
 function DoMailSendCheckSendStatus(now)

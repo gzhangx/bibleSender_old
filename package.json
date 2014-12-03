@@ -12,6 +12,6 @@
 		"test": "grunt test"
 	},
 	"dependencies": {
-		"nodemailer": "latest"
+		"mandrill-api": "latest"
 	}
 }
