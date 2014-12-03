@@ -221,14 +221,15 @@ var loadData = function (today) {
 //var resss = loadData(new Date());
 //console.log(resss.Data);
 
-function SendEmail(now)
+var SendEmail = function(now)
 {
-    var data = LoadData(now);
+    var data = loadData(now);
     var message = {};
     var sendTo = ''; //GetSetting("mailTo");
     
     message.Subject = data.Subject + ', ' + now.yyyymmdd();
-    message.BodyEncoding = System.Text.Encoding.UTF8;
+    console.log('sending ' + message.Subject);
+    //message.BodyEncoding = System.Text.Encoding.UTF8;
     message.Body = data.Data;
     //Log(now.ToString("yyyy-MM-dd") + " " + sendTo + " " + message.Subject);         
     //SendMailDefaultFrom(message);
@@ -245,14 +246,18 @@ function DoMailSendCheckSendStatus(now)
     var date = now.yyyymmdd();
     var sendStatusFile = '';
     if (fs.existsSync(sentFileName)) {
-        sendStatusFile = (fs.readFileSync(sentFileName, function (err) {
-            if (err) console.log('sent.txt error ' + err);
-        }) || '').split('\n');
-        if (sendStatusFile.length > 0 && sendStatusFile[sendStatusFile.length - 1].indexOf(date) >= 0) return;
+        sendStatusFile = fs.readFileSync(sentFileName).toString().split('\n');
+        if (sendStatusFile.length > 0) {
+            for (var i = 1; i <= sendStatusFile.length ; i++) {
+                if (sendStatusFile[sendStatusFile.length - i].indexOf(date) >= 0) {
+                    return;
+                }
+                if (i > 3) break;
+            }
+        }
     }
     var sub = SendEmail(now);
-    fs.appendFileSync('log.txt', 'Hello', encoding = 'utf8');
-    File.AppendAllText(sentFileName, date + '   ' + sub + '\r\n');
+    fs.appendFileSync(sentFileName, date + '   ' + sub + '\r\n', 'utf8');
 }
 
 DoMailSendCheckSendStatus(new Date());
