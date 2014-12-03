@@ -269,7 +269,7 @@ var TongWen = (function () {
 	}
 
 	function trans2Simp(doc) {
-		transPage(doc || document, flagSimp);
+		return transPage(doc || document, flagSimp);
 	}
 
 	function transAuto(doc) {
