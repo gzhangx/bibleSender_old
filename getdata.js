@@ -69,6 +69,17 @@ var ParseLineData = function(data)
           return lineData;
       };
 
+var _MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+// a and b are javascript Date objects
+function dateDiffInDays(a, b) {
+    // Discard the time and time-zone information.
+    var utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+    var utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+
+    return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+}
+
 var GetTodaysSearch = function (data, today) {
     var retResult = {
         Verses: []
@@ -76,12 +87,8 @@ var GetTodaysSearch = function (data, today) {
     var results = retResult.Verses;
     var lines = data.split('\n');
     var startDate = new Date(Date.parse(toASCII(lines[0].substring(1))));
-    var dd = new Date(Date.parse('2014-01-01'));
-    dd.setUTCFullYear(startDate.getFullYear());
-    dd.setUTCMonth(startDate.getMonth());
-    dd.setUTCDate(startDate.getDate());
-    startDate = dd;
-    var days = Math.round((today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+    
+    var days = dateDiffInDays(startDate, today);
     if (days < 0) return null;
     var DAYS_PER_LINE = 7;
     var curLinePos = 1;
@@ -228,7 +235,7 @@ var SendEmail = function(now)
     var sendTo = ''; //GetSetting("mailTo");
     
     message.subject = data.Subject + ', ' + now.yyyymmdd();
-    console.log('sending ' + message.Subject);
+    console.log('sending ' + message.subject);
     //message.BodyEncoding = System.Text.Encoding.UTF8;
     message.text = data.Data;
     //Log(now.ToString("yyyy-MM-dd") + " " + sendTo + " " + message.Subject);         
@@ -247,8 +254,8 @@ var SendEmail = function(now)
     message.from_email = "gzhangx@gmail.com";
     message.from_name = "Gang Zhang";
     message.to = [{
-        "email": "gzhangx@hotmail.com",
-        "name": "Test",
+        "email": "hebrewsofacccn@googlegroups.com",
+        //"name": "Test",
         "type": "to"
     }];
     mandrill_client.messages.send({ "message": message, "async": async, "ip_pool": ip_pool}, function (result) {
