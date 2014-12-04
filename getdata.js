@@ -86,7 +86,7 @@ var GetTodaysSearch = function (data, today) {
     };
     var results = retResult.Verses;
     var lines = data.split('\n');
-    var startDate = new Date(Date.parse(toASCII(lines[0].substring(1))));
+    var startDate = new Date(Date.parse(toASCII(lines[0].substring(1)))+(12*3600*1000));
     
     var days = dateDiffInDays(startDate, today);
     if (days < 0) return null;
