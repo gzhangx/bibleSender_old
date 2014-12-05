@@ -70,6 +70,7 @@ var ParseLineData = function(data)
       };
 
 var _MS_PER_DAY = 1000 * 60 * 60 * 24;
+var _MS_PER_HALFDAY = _MS_PER_DAY/2;
 
 // a and b are javascript Date objects
 function dateDiffInDays(a, b) {
@@ -77,7 +78,7 @@ function dateDiffInDays(a, b) {
     var utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
     var utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
 
-    return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+    return Math.floor((utc2 + _MS_PER_HALFDAY - utc1) / _MS_PER_DAY);
 }
 
 var GetTodaysSearch = function (data, today) {
