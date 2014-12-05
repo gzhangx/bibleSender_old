@@ -96,7 +96,7 @@ var GetTodaysSearch = function (data, today) {
     //for (var i = 0; i <= (days / DAYS_PER_LINE); i++)
     {
         //if (curLinePos >= lines.length) break;
-        var curLineDay = Math.round(days / DAYS_PER_LINE) + 1;
+        var curLineDay = Math.floor(days / DAYS_PER_LINE) + 1;
         var curLine = lines[curLineDay].trim();
         var day = days % DAYS_PER_LINE;
         var lineData = ParseLineData(curLine.split(/[\s\t]+/));
