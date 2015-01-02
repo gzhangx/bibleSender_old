@@ -81,6 +81,28 @@ function dateDiffInDays(a, b) {
     return Math.floor((utc2 + _MS_PER_HALFDAY - utc1) / _MS_PER_DAY);
 }
 
+function ScheduleToJson(){
+    var data = fs.readFileSync('schedule.txt', 'utf8', function (err) {
+        if (err) console.log('schedule.txt error ' + err);
+    });
+    var lines = data.split('\n');
+    var startDate = new Date(Date.parse(toASCII(lines[0].substring(1)))+(12*3600*1000));
+    var res = {startDate: {y: startDate.getFullYear(), m: startDate.getMonth(), d : startDate.getDate()}, schedule:[], verses: {}};
+    var pos = 0;
+    for (var i = 1; i < lines.length; i++) {
+        var curLine = lines[i];
+        var lineData = ParseLineData(curLine.split(/[\s\t]+/));
+        res.schedule.push(lineData);
+        console.log('reading line '+ i + ' of ' + lines.length+ ' ' + curLine);
+        for (var li in lineData) {
+            if (parseInt(li) === 0) continue;
+            res.verses[lineData[li]] = { pos: pos++};
+        }
+    }
+
+    var fcnt = JSON.stringify(res);
+    fs.writeFileSync('schedule.json', fcnt);
+}
 var GetTodaysSearch = function (data, today) {
     var retResult = {
         Verses: []
@@ -89,7 +111,7 @@ var GetTodaysSearch = function (data, today) {
     var lines = data.split('\n');
     var startDate = new Date(Date.parse(toASCII(lines[0].substring(1)))+(12*3600*1000));
     
-    var days = dateDiffInDays(startDate, today);
+    var days = dateDiffInDays(startDate, today)%728;
     if (days < 0) return null;
     var DAYS_PER_LINE = 7;
     var curLinePos = 1;
@@ -309,3 +331,5 @@ function DoMailSendCheckSendStatus(now)
 }
 
 DoMailSendCheckSendStatus(new Date());
+
+//ScheduleToJson();
