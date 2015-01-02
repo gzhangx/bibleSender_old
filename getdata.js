@@ -239,7 +239,7 @@ var SendEmail = function(now)
     message.subject = data.Subject + ', ' + now.yyyymmdd();
     console.log('sending ' + message.subject);
     //message.BodyEncoding = System.Text.Encoding.UTF8;
-    message.text = data.Data + '\r\n\r\n请用连接记录您读经: http://veda-inc.com/#!/recordVerse?title='+data.SubjectTag+'&group=HEBREWSATL_XE6F';
+    message.text = data.Data + '\r\n\r\n请用连接记录您读经: http://veda-inc.com/#!/recordVerse?group=希伯来&title='+data.SubjectTag;
     //Log(now.ToString("yyyy-MM-dd") + " " + sendTo + " " + message.Subject);         
     //SendMailDefaultFrom(message);
     //using (var sw = File.CreateText(@"c:\temp\bible\" + message.Subject.Replace("/", "_").Replace("\\", "_").Replace("<", "_").Replace(">", "_").Replace(":", "_").Replace("|", "_") + ".txt"))
