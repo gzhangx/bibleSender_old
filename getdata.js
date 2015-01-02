@@ -213,6 +213,7 @@ var loadData = function (today) {
     var ret = {};
     var data = GetOutput(bibleData, searches.Verses);
     if (searches.Subject === null) return null;
+    ret.SubjectTag = searches.Subject.trim().replace(/ /g,'');
     var simpSub = TongWen.trans2Simp(searches.Subject);
     if (simpSub == searches.Subject) {
         ret.Subject = searches.Subject;
@@ -256,6 +257,7 @@ var SendEmail = function(now)
     message.from_name = "Gang Zhang";
     message.to = [{
         "email": "hebrewsofacccn@googlegroups.com",
+        //"email": "gzhangx@hotmail.com",
         //"name": "Test",
         "type": "to"
     }];
@@ -266,7 +268,7 @@ var SendEmail = function(now)
         console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
         // A mandrill error occurred: Unknown_Subaccount - No subaccount exists with the id 'customer-123'
     });
-    return data.subject;
+    return data;
 }
 
 function DoMailSendCheckSendStatus(now)
@@ -285,8 +287,25 @@ function DoMailSendCheckSendStatus(now)
             }
         }
     }
-    var sub = SendEmail(now);
-    fs.appendFileSync(sentFileName, date + '   ' + sub + '\r\n', 'utf8');
+    var dsub = SendEmail(now);
+    fs.appendFileSync(sentFileName, date + '   ' + dsub.Subject + '\r\n', 'utf8');
+
+    var recentSubFileName = 'recents.txt';
+    var recents = [];
+    if (fs.existsSync(recentSubFileName)) {
+        recents = fs.readFileSync(sentFileName).toString().split('\n');
+    }
+    var keepRecents = [];
+    for (var rr = 6; rr >=0; rr--) {
+        if (recents.length > rr) {
+            var ln = recents[recents.length - rr - 1];
+            if (ln.trim() == '') continue;
+            keepRecents.push(ln);
+        }
+    }
+    keepRecents.push(dsub.SubjectTag);
+    fs.writeFileSync(recentSubFileName, keepRecents.join('\n'), 'utf8');
+
 }
 
 DoMailSendCheckSendStatus(new Date());
