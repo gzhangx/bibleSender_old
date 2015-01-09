@@ -270,7 +270,7 @@ var SendEmail = function(now)
     //}
 
     var mandrill = require('mandrill-api/mandrill');
-    var mandrill_client = new mandrill.Mandrill('xgTWejYD9NOZjNEG2SJMbQ', true);
+    var mandrill_client = new mandrill.Mandrill(process.env.MAILER_PASSWORD, true);
 
     var async = false;
     var ip_pool = "Main Pool";
