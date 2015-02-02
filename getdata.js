@@ -105,7 +105,8 @@ function ScheduleToJson(){
 }
 var GetTodaysSearch = function (data, today) {
     var retResult = {
-        Verses: []
+        Verses: [],
+        AudioLinks: []
     };
     var results = retResult.Verses;
     var lines = data.split('\n');
@@ -113,6 +114,19 @@ var GetTodaysSearch = function (data, today) {
     
     var days = dateDiffInDays(startDate, today)%728;
     if (days < 0) return null;
+
+    var shortNameToEngConv = JSON.parse(fs.readFileSync('short_eng_conv.txt', 'utf8'));
+    var engToAudiUrls = JSON.parse(fs.readFileSync('audio_info.txt', 'utf8'));
+
+    function findAudio(engName, chapter) {
+        var ichapter = parseInt(chapter);
+        for (var etai in engToAudiUrls) {
+            var audioInf = engToAudiUrls[etai];
+            if (audioInf.ename === engName && audioInf.chapter === ichapter) return audioInf;
+        }
+        return { failed: 'Unable to find audio for ' + engName+' ' + chapter};
+    }
+
     var DAYS_PER_LINE = 7;
     var curLinePos = 1;
     //for (var i = 0; i <= (days / DAYS_PER_LINE); i++)
@@ -135,7 +149,11 @@ var GetTodaysSearch = function (data, today) {
                 }
             }
             var bookName = curdata.substring(0, numStart);
+
+            var engName = shortNameToEngConv[bookName] || null;
+            console.log('book name ' + bookName+' engname='+engName);
             var numbers = curdata.substring(numStart);
+
             //formats: book#-#
             //         book#:#-#
             //         book #(#/#)
@@ -153,6 +171,8 @@ var GetTodaysSearch = function (data, today) {
                 else {
                     results.push({ Verse: curdata });
                 }
+
+                retResult.AudioLinks.push(findAudio(engName, verse));
             } else
                 if (numbers.indexOf("-") > 0) {
                     var numberary = numbers.split('-');
@@ -160,13 +180,16 @@ var GetTodaysSearch = function (data, today) {
                     var toVer = parseInt(numberary[1]);
                     for (var num = fromVer; num <= toVer; num++) {
                         results.push({ Verse: bookName + num });
+                        retResult.AudioLinks.push(findAudio(engName, num));
                     }
                 }
                 else if (numbers.indexOf("(") > 0) {
+                    var chapterN = numbers.indexOf("(");
                     var pt =
                         {
-                            Verse: bookName + numbers.substring(0, numbers.indexOf("("))
+                            Verse: bookName + numbers.substring(0, chapterN)
                         };
+                    retResult.AudioLinks.push(findAudio(engName, chapterN));
                     var partialStr = numbers.substring(numbers.indexOf("("));
                     var startNTotal = partialStr.split(/[\(/\)]/);
                     pt.Part = parseInt(startNTotal[0]);
