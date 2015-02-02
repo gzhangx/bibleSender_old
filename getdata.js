@@ -266,6 +266,15 @@ var loadData = function (today) {
     else {
         ret.Subject = simpSub + ' (' + searches.Subject + ')';
     }
+
+    ret.Data = '';
+    if (searches.AudioLinks !== null && searches.AudioLinks.length > 0) {
+        for (var ai = 0; ai < searches.AudioLinks.length; ai++) {
+            var sinf = searches.AudioLinks[ai];
+            ret.Data += '<a href="' + sinf.url+'">' + sinf.ename + '</href>\r\n';
+        }
+    }
+
     ret.Data = "===========简体中文=============\r\n" + TongWen.trans2Simp(data) + "\r\n===========繁体中文=============\r\n" + data;
     return ret;
 
