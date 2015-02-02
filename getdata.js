@@ -271,7 +271,7 @@ var loadData = function (today) {
     if (searches.AudioLinks !== null && searches.AudioLinks.length > 0) {
         for (var ai = 0; ai < searches.AudioLinks.length; ai++) {
             var sinf = searches.AudioLinks[ai];
-            ret.Data += '<a href="' + sinf.url+'">' + sinf.ename + '</href>\r\n';
+            ret.Data += '<a href="' + sinf.url+'">' + sinf.ename + ' ' + sinf.chapter + '</href>\r\n';
         }
     }
 
@@ -360,3 +360,13 @@ function DoMailSendCheckSendStatus(now)
 DoMailSendCheckSendStatus(new Date());
 
 //ScheduleToJson();
+/*
+for (var i = 0; i < 1000; i++) {
+    var now = new Date();
+    now.setDate(now.getDate()+i);
+    console.log(now+"\r\n");
+    var data = loadData(now);
+    console.log(data.Subject+"\r\n");
+    console.log('data='+data.Data+"\r\n");
+}
+/* */
