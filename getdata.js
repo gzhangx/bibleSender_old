@@ -275,7 +275,7 @@ var loadData = function (today) {
         }
     }
 
-    ret.Data = "===========简体中文=============\r\n" + TongWen.trans2Simp(data) + "\r\n===========繁体中文=============\r\n" + data;
+    ret.Data += "===========简体中文=============\r\n" + TongWen.trans2Simp(data) + "\r\n===========繁体中文=============\r\n" + data;
     return ret;
 
 };
