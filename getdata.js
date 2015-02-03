@@ -271,7 +271,7 @@ var loadData = function (today) {
     if (searches.AudioLinks !== null && searches.AudioLinks.length > 0) {
         for (var ai = 0; ai < searches.AudioLinks.length; ai++) {
             var sinf = searches.AudioLinks[ai];
-            ret.Data += sinf.url+ ' ' + sinf.ename + ' ' + sinf.chapter + 'r\n';
+            ret.Data += sinf.url+ ' ' + sinf.ename + ' ' + sinf.chapter + '\n';
         }
     }
 
