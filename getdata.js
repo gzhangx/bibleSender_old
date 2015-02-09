@@ -198,6 +198,7 @@ var GetTodaysSearch = function (data, today) {
                 }
                 else {
                     results.push({ Verse: curdata });
+		    retResult.AudioLinks.push(findAudio(engName, numbers));
                 }
         }
 
