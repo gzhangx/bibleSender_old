@@ -312,10 +312,11 @@ var SendEmail = function(now)
     message.from_name = "Gang Zhang";
     message.to = [{
         "email": "hebrewsofacccn@googlegroups.com",
-        //"email": "gzhangx@hotmail.com",
         //"name": "Test",
         "type": "to"
-    }];
+    }
+    ,{"email": "mailxinli@gmail.com"}
+    ];
 
     mandrill_client.messages.send({ "message": message, "async": async, "ip_pool": ip_pool}, function (result) {
             console.log(result);
