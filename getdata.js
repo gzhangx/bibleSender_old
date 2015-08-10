@@ -308,7 +308,7 @@ var SendEmail = function(now)
     var async = false;
     var ip_pool = "Main Pool";
     var send_at = "example send_at";
-    message.from_email = "gzhangx@gmail.com";
+    message.from_email = "gzhangx@hotmail.com";
     message.from_name = "Gang Zhang";
     message.to = [{
         "email": "hebrewsofacccn@googlegroups.com",
