@@ -285,6 +285,21 @@ var loadData = function (today) {
 //var resss = loadData(new Date());
 //console.log(resss.Data);
 
+function sendMailByMailGun(message) {
+ var Mailgun = require('mailgun').Mailgun;
+
+  var mg = new Mailgun(process.env.MAILGUN_PASSWORD);
+mg.sendText('gzhangx@hotmail.com', ['Recipient 1 <gzhangx@hotmail.com>', 'mailxinli@gmail.com', 'gzhangx@gmail.com'],
+  message.subject,
+  message.text,
+  'gzhangx@hotmail.com', {},
+  function(err) {
+    if (err) console.log('Oh noes: ' + err);
+    else     console.log('Success');
+});
+ 
+}
+
 var SendEmail = function(now)
 {
     var data = loadData(now);
@@ -302,6 +317,9 @@ var SendEmail = function(now)
     //    sw.WriteLine(data.Data);
     //}
 
+
+    sendMailByMailGun(message);
+return data;
     var mandrill = require('mandrill-api/mandrill');
     var mandrill_client = new mandrill.Mandrill(process.env.MAILER_PASSWORD, true);
 
