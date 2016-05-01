@@ -289,9 +289,9 @@ function sendMailByMailGun(message) {
  var Mailgun = require('mailgun').Mailgun;
 
   var mg = new Mailgun(process.env.MAILGUN_PASSWORD);
-mg.sendText('gzhangx@hotmail.com', ['Recipient 1 <gzhangx@hotmail.com>',
-// 'mailxinli@gmail.com', 
-'gzhangx@gmail.com'],
+mg.sendText('gzhangx@gmail.com', ['Recipient 1 <gzhangx@hotmail.com>',
+ 'mailxinli@gmail.com', 
+'hebrewsofacccn@googlegroups.com'],
   message.subject,
   message.text,
   'gzhangx@hotmail.com', {},
