@@ -389,7 +389,7 @@ function SendEmailToMe(now) {
 
     var mg = new Mailgun(process.env.MAILGUN_PASSWORD);
     mg.sendText('gzhangx@gmail.com', [
-     'gzhangx@gmail.com'],
+     'gzhangx@hotmail.com'],
       message.subject,
       message.text,
       'gzhangx@hotmail.com', {},
