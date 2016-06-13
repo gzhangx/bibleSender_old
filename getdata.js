@@ -435,7 +435,7 @@ function DoMailSendCheckSendStatus(now)
     keepRecents.push(dsub.SubjectTag);
     fs.writeFileSync(recentSubFileName, keepRecents.join('\n'), 'utf8');
 
-    SendEmailToMe();
+    SendEmailToMe(now);
 
 }
 
